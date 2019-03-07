@@ -14,7 +14,10 @@ namespace CoreGiris.Models
         }
         protected override void OnModelCreating( ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Product>
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Product>()
+                .Property(x => x.UnitPrice)
+                .HasColumnType("decimal(7,2)");
         }
 
 
