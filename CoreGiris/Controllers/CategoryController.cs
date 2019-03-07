@@ -41,5 +41,27 @@ namespace CoreGiris.Controllers
             db.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
+
+        public IActionResult Delete(int id=0)
+        {
+            var db = new MyContext();
+            var category = db.Categories.FirstOrDefault(x=>x.Id==id);
+            if(category==null)
+            {
+                TempData["Message"] = "Kategori bulunamadı";
+                return RedirectToAction("Index");
+              
+            }
+            if (category.Products.Count > 0)
+            {
+                TempData["Message"] = $"{category.CategoryName} isimli Kategori silemezsiniz";
+                return RedirectToAction("Index");
+            }
+            db.Categories.Remove(category);
+            db.SaveChanges();
+            TempData["Message"] = $"{category.CategoryName} isimli Kategori silinmiştir.";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
