@@ -13,7 +13,10 @@ namespace CoreGiris.Controllers
         public IActionResult Index()
         {
             var db = new MyContext();//product sayısını ı görmesi için ürün ekledik.yoksa hep 0 yapıyordu...
-            var data = db.Categories.Include(x=>x.Products).OrderBy(x => x.CategoryName).ToList();
+            var data = db.Categories
+                .Include(x=>x.Products)
+               // .ThenInclude(x=>x.Suppliers)
+                .OrderBy(x => x.CategoryName).ToList();
             return View(data);
         }
         [HttpGet]
@@ -46,7 +49,7 @@ namespace CoreGiris.Controllers
         public IActionResult Delete(int id=0)
         {
             var db = new MyContext();
-            var category = db.Categories.FirstOrDefault(x=>x.Id==id);
+            var category = db.Categories.Include(x=>x.Products).FirstOrDefault(x=>x.Id==id);
             if(category==null)
             {
                 TempData["Message"] = "Kategori bulunamadı";
@@ -62,6 +65,45 @@ namespace CoreGiris.Controllers
             db.SaveChanges();
             TempData["Message"] = $"{category.CategoryName} isimli Kategori silinmiştir.";
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id=0)
+        {
+            var db = new MyContext();
+            var category = db.Categories.FirstOrDefault(x => x.Id == id);
+            if (category == null)
+            {
+                TempData["Message"] = "Kategori bulunamadı";
+                return RedirectToAction("Index");
+
+            }
+
+            return View(category);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Category model)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var db = new MyContext();
+
+            var category = db.Categories.FirstOrDefault(x => x.Id == model.Id);
+            if (category == null)
+            {
+                TempData["Message"] = "Kategori bulunamadı";
+                return RedirectToAction("Index");
+
+            }
+
+            category.CategoryName = model.CategoryName;
+            db.SaveChanges();
+            TempData["Message"] = "Kategori Güncelleme İşlemi Başarılı";
+
+            return RedirectToAction("Index");
         }
     }
 }
