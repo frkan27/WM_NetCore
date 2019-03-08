@@ -13,3 +13,6 @@ namespace CoreIdentity.Data.IndetityModels
         public string Description { get; set; }
     }
 }
+
+//enable- migration kullanmaya gerek yok. direkt add-migration yapabiliriz.
+//

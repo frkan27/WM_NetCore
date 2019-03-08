@@ -39,6 +39,7 @@ namespace CoreIdentity
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<ApplicationUser>()//ıdentityuser yerine applicationuser yazdık...
+                .AddRoles<ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             //Asp.net core ıdentity sayfasından kopyaladık...
@@ -69,7 +70,7 @@ namespace CoreIdentity
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
 
-                options.LoginPath = "/Identity/Account/Login";
+                options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
@@ -95,7 +96,7 @@ namespace CoreIdentity
             app.UseStaticFiles();
           
 
-            app.UseAuthentication();
+            app.UseAuthentication();//Role olayaları için gerekli.
 
             app.UseMvc(routes =>
             {

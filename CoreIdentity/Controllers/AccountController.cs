@@ -8,7 +8,8 @@ namespace CoreIdentity.Controllers
 {
     public class AccountController : Controller
     {
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Register()
         {
             return View();
         }
