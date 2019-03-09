@@ -38,36 +38,38 @@ namespace CoreIdentity
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<ApplicationUser>()//ıdentityuser yerine applicationuser yazdık...
+            services.AddDefaultIdentity<ApplicationUser>()//ıdentityuser yerine applicationuser yazdık...Ad soyad alanını kullanmak için.
                 .AddRoles<ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             //Asp.net core ıdentity sayfasından kopyaladık...
             services.Configure<IdentityOptions>(options =>
             {
+                //password ayarları bu sekilde otomatik yapılıyor.
                 // Password settings.
                 options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
+                options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequireUppercase = false;
+                options.Password.RequireUppercase = true;
                 options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 1;
+                options.Password.RequiredUniqueChars = 0;
 
                 // Lockout settings.
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.AllowedForNewUsers = false;
 
                 // User settings.
                 options.User.AllowedUserNameCharacters =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+*";
                 options.User.RequireUniqueEmail = false;
             });
 
             services.ConfigureApplicationCookie(options =>
             {
+                //giriş yapıldığında cookie nin ayarlarını burdan yaparız.
                 // Cookie settings
-                options.Cookie.HttpOnly = true;
+                options.Cookie.HttpOnly = true;//Uygulamaya baglandığımızda cookşe miz 30 dakkalık olsun.
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
 
                 options.LoginPath = "/Account/Login";

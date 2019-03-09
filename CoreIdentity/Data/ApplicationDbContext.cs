@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoreIdentity.Data
 {
+    //Identity nin kendi EntityFrameworkunu kullandığımız içn.
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser,ApplicationRole,string>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

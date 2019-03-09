@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoreIdentity.Data.IndetityModels
 {
+    //ıd yi string yaparsak core onu otomatik olarak guid yapıyor.
     public class ApplicationUser:IdentityUser
     {
         [Required,StringLength(50)]
