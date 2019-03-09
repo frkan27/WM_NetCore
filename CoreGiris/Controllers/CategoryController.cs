@@ -58,7 +58,8 @@ namespace CoreGiris.Controllers
             }
             if (category.Products.Count > 0)
             {
-                TempData["Message"] = $"{category.CategoryName} isimli Kategori silemezsiniz";
+                //Tempdata bikere çalışıyor.Sayfayı yenileyince gözükmüyor.
+                TempData["Message"] = $"{category.CategoryName} isimli Kategoriye bağlı ürün olduğundan silemezsiniz";
                 return RedirectToAction("Index");
             }
             db.Categories.Remove(category);
@@ -67,9 +68,10 @@ namespace CoreGiris.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
-        public IActionResult Edit(int id=0)
+        [HttpGet]//Güncelle ekranına içecekleri yazıyor.
+        public IActionResult Edit(int id=0)//düzenleye tıkladığımızda olanlar.id ye göre buluyor.
         {
+            //categoryi bulup null kontrolü yapıyoruz.
             var db = new MyContext();
             var category = db.Categories.FirstOrDefault(x => x.Id == id);
             if (category == null)
@@ -82,8 +84,8 @@ namespace CoreGiris.Controllers
             return View(category);
         }
 
-        [HttpPost]
-        public IActionResult Edit(Category model)
+        [HttpPost]//içecekleri silip ne yazdıysak onu kaydediyor.
+        public IActionResult Edit(Category model)//Güncelledikten sonra olanalr.
         {
             if(!ModelState.IsValid)
             {

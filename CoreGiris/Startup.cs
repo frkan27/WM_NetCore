@@ -55,7 +55,7 @@ namespace CoreGiris
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            app.UseCookiePolicy();
+            app.UseCookiePolicy();//tempdata gözükmesi için alta aldık.
         }
     }
 }
