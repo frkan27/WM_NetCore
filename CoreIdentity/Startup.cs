@@ -37,7 +37,8 @@ namespace CoreIdentity
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection")))
+                    .AddAuthorization();//ekliyoruz...
             services.AddDefaultIdentity<ApplicationUser>()//ıdentityuser yerine applicationuser yazdık...Ad soyad alanını kullanmak için.
                 .AddRoles<ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoreIdentity.Data;
 using CoreIdentity.Data.IndetityModels;
+using CoreIdentity.Models;
 using CoreIdentity.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,7 @@ namespace CoreIdentity.Controllers
     {
         //dependency ınjection olan şeyleri startapa service.add diyerek eklemememiz lazım.
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;//rolleri eklemek için ihtiyacımız var
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _dbContext;
         //ınject edince constructorda eşlemek lazım.ctrl. ilegelmesi lazım ama gelmedi ???? 
@@ -49,6 +50,16 @@ namespace CoreIdentity.Controllers
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
+                await CreateRoles();
+                if (_userManager.Users.Count()==1)
+                {
+                    await _userManager.AddToRoleAsync(user, IdentityRoles.Admin.ToString());
+                }
+                else
+                {
+                    await _userManager.AddToRoleAsync(user, IdentityRoles.User.ToString());
+                }
+
                 return RedirectToAction(nameof(Login));
             }
             else
@@ -90,6 +101,22 @@ namespace CoreIdentity.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        private async Task CreateRoles()
+        {
+            var roleNames = Enum.GetNames(typeof(IdentityRoles));
+            foreach (var roleName in roleNames)
+            {
+                if (!_roleManager.RoleExistsAsync(roleName).Result)
+                {
+                    await _roleManager.CreateAsync(new ApplicationRole()
+                    {
+                        Name = roleName
+                    });
+
+                } 
+            }
         }
     }
 }

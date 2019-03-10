@@ -5,9 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CoreIdentity.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoreIdentity.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         public IActionResult Index()
@@ -21,7 +23,7 @@ namespace CoreIdentity.Controllers
 
             return View();
         }
-
+        [Authorize(Roles ="Admin")]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
