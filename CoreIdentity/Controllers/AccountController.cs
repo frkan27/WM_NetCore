@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CoreIdentity.Data;
 using CoreIdentity.Data.IndetityModels;
 using CoreIdentity.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -65,6 +66,30 @@ namespace CoreIdentity.Controllers
         public IActionResult Login()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var result =await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true);
+            if (result.Succeeded)//succeeded await yazmadan gelmiyor.
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            ModelState.AddModelError(String.Empty, "Kullanıcı adı veya sifre hatalı");
+            return View(model);
+        }
+
+        [Authorize]//Giriş yapmışlar görsğn diye yaptık.
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
