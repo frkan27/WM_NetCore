@@ -39,8 +39,8 @@ namespace CoreIdentity
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")))
                     .AddAuthorization();//ekliyoruz...
-            services.AddDefaultIdentity<ApplicationUser>()//ıdentityuser yerine applicationuser yazdık...Ad soyad alanını kullanmak için.
-                .AddRoles<ApplicationRole>()
+
+            services.AddIdentity<ApplicationUser,ApplicationRole>()//ıdentityuser yerine applicationuser yazdık...Ad soyad alanını kullanmak için.   //admin user a özel sayfalar için gerekli.           
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             //Asp.net core ıdentity sayfasından kopyaladık...
